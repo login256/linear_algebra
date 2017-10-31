@@ -4,23 +4,22 @@
 #include<algorithm>
 #include<iostream>
 #include<cstdio>
-#include<cmath>
+#include"num.cpp"
 
 namespace linear_algebra
 {
 	using std::abs;
 	using std::swap;
-	const double eps=1e-6;
 	const int MAXN=10;
 	class matrix
 	{
 		private:
-			double a[MAXN][MAXN];
+			num a[MAXN][MAXN];
 			int m,n;
 			bool b;
 		public:
 			matrix(){}
-			matrix(int mm,int nn,bool bb,double *aa):m(mm),n(nn),b(bb)
+			matrix(int mm,int nn,bool bb,num *aa):m(mm),n(nn),b(bb)
 			{
 				int cur=0;
 				for(int i=1;i<=m;i++)
@@ -38,12 +37,13 @@ namespace linear_algebra
 				{
 					for(int k=1;k<=n+b;k++)
 					{
-						printf("%8.4f",a[j][k]);
+						//printf("%8.4f",a[j][k]);
+						a[j][k].print(9);
 					}
 					putchar(10);
 				}
 			}
-			void guass(int need_print)	//need_print=0:????? 1:??????? 2:??????????
+			void guass(int need_print)	//need_print=0:不输出 1:输出操作 2:每次输出矩阵
 			{
 				int cur=0;
 				for(int i=1;i<=m;i++)
@@ -56,19 +56,22 @@ namespace linear_algebra
 					while(cur<=n)
 					{
 						int j=i;
-						while(j<=m&&abs(a[j][cur])<=eps)
+						while(j<=m&&a[j][cur]==num(0))
 						{
 							j++;
 						}
 						if(j<=m)
 						{
-							for(int k=cur;k<=n+b;k++)
+							if(i!=j)
 							{
-								swap(a[i][k],a[j][k]);
-							}
-							if(i!=j&&need_print)
-							{
-								printf("(%d,%d), ",i,j);
+								for(int k=cur;k<=n+b;k++)
+								{
+									swap(a[i][k],a[j][k]);
+								}
+								if(need_print)
+								{
+									printf("(%d,%d), ",i,j);
+								}
 							}
 							break;
 						}
@@ -81,19 +84,24 @@ namespace linear_algebra
 					{
 						break;
 					}
-					double lam=0;
+					num lam{0};
 					for(int j=1;j<=m;j++)
 					{
 						if(i^j)
 						{
-							lam=-a[j][cur]/a[i][cur];
-							for(int k=cur;k<=n+b;k++)
+							if(a[j][cur]!=0)
 							{
-								a[j][k]+=a[i][k]*lam;
-							}
-							if(need_print)
-							{
-								printf("%.4lf(%d)+(%d), ",lam,i,j);
+								lam=-a[j][cur]/a[i][cur];
+								for(int k=cur;k<=n+b;k++)
+								{
+									a[j][k]=a[j][k]+(a[i][k]*lam);
+								}
+								if(need_print)
+								{
+									//printf("%.4lf(%d)+(%d), ",lam,i,j);
+									std::cout<<lam;
+									printf("(%d)+(%d), ",i,j);
+								}
 							}
 						}
 					}
@@ -115,7 +123,7 @@ namespace linear_algebra
 					int be=0;
 					for(int j=1;j<=n;j++)
 					{
-						if(abs(a[i][j])>eps)
+						if(a[i][j]!=num(0))
 						{
 							be=j;
 							break;
@@ -123,14 +131,16 @@ namespace linear_algebra
 					}
 					if(be)
 					{
-						double lam=1/a[i][be];
+						num lam=num(1)/a[i][be];
 						for(int j=be;j<=n+b;j++)
 						{
-							a[i][j]*=lam;
+							a[i][j]=a[i][j]*lam;
 						}
 						if(need_print)
 						{
-							printf("%.4lf(%d), ",lam,i);
+							//printf("%.4lf(%d), ",lam,i);
+							std::cout<<lam;
+							printf("(%d), ",i);
 						}
 					}
 				}
