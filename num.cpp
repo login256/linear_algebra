@@ -24,7 +24,7 @@ namespace linear_algebra
 	class num
 	{
 		private:
-			int numerator,denominator;	//numerator:·Ö×Ó denominator:·ÖÄ¸
+			int numerator,denominator;	//numerator:åˆ†å­ denominator:åˆ†æ¯
 			void reduce()
 			{
 				if(denominator==0)

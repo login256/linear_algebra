@@ -43,7 +43,7 @@ namespace linear_algebra
 					putchar(10);
 				}
 			}
-			void guass(int need_print)	//need_print=0:²»Êä³ö 1:Êä³ö²Ù×÷ 2:Ã¿´ÎÊä³ö¾ØÕó
+			void guass(int need_print=0)	//need_print=0:ä¸è¾“å‡º 1:è¾“å‡ºæ“ä½œ 2:æ¯æ¬¡è¾“å‡ºçŸ©é˜µ
 			{
 				int cur=0;
 				for(int i=1;i<=m;i++)
@@ -152,6 +152,37 @@ namespace linear_algebra
 				}
 				return;
 			}
+			bool is_square()
+			{
+				return n==m;
+			}
+			int get_row()
+			{
+				return m;
+			}
+			int get_col()
+			{
+				return n;
+			}
+			num get_element(int i,int j)
+			{
+				return a[i][j];
+			}
 	};
+	num det(matrix ma)//å› ä¸ºè¦é«˜æ–¯ï¼Œæ‰€ä»¥ä¸ä¼ å¼•ç”¨å‚ã€‚
+	{
+		if(!ma.is_square())
+		{
+			std::cerr<<"If you want to get det,the matrix should be a square matrix!";
+			return 0;
+		}
+		ma.guass();
+		num re=1;
+		for(int i=1;i<=ma.get_row();i++)
+		{
+			re=re*ma.get_element(i,i);
+		}
+		return re;
+	}
 }
 #endif
